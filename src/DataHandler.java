@@ -26,7 +26,10 @@ public class DataHandler {
         
         tableNames.add("Members");
         tableNames.add("boats");
-        tableNames.add("rented");
+        tableNames.add("Rentals");
+        tableNames.add("revenue");
+        tableNames.add("store");
+        
         
         
         return tableNames;
@@ -65,8 +68,27 @@ public class DataHandler {
             ex.printStackTrace();
         }
     }
-    public static void  allocateRental(String id1){
-        String query="INSERT INTO rented SELECT * FROM boats WHERE boatID="+id1;
+    public static void addBoat(String ID, String bname, String bage  , String bbrand) {
+        String msAccDB = "firstGUIdb.accdb";
+        String dbURL ="jdbc:ucanaccess://" + msAccDB;
+        String query = "INSERT INTO boats VALUES ('" + ID + "','" + bname + "','" + bage + "','" + bbrand + "');";
+        System.out.println(query);
+        // Step 1: Loading or registering Oracle JDBC driver class
+        // Step 2: Opening database connection
+        // Step 2.A: Create and get connection using DriverManager class
+        try ( Connection con = java.sql.DriverManager.getConnection(dbURL, "", "")) {
+            stm = con.createStatement();
+            stm.executeUpdate(query); // execute query on the database                       
+        } catch (java.sql.SQLException sqlex) {
+            System.err.println(sqlex);
+            sqlex.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println(ex);
+            ex.printStackTrace();
+        }
+    }
+    public static void removeBoat(String idd){
+        String query="DELETE FROM boats WHERE boatID="+idd;
         System.out.println(query);
         try ( Connection con = java.sql.DriverManager.getConnection(dbURL, "", "")) {
             stm = con.createStatement();
@@ -79,8 +101,27 @@ public class DataHandler {
             ex.printStackTrace();
         }
     }
-    public static void removeRecord(String id2){
-        String query= "DELETE FROM rented WHERE boatID="+id2;
+     public static void rentalInfor(String rentalID, String boatID, String memberID) {
+        String msAccDB = "firstGUIdb.accdb";
+        String dbURL ="jdbc:ucanaccess://" + msAccDB;
+        String query = "INSERT INTO rentals(rentalID, boatID, memberID) VALUES ('" + rentalID + "','" + boatID + "','" + memberID +"');"; 
+        System.out.println(query);
+        // Step 1: Loading or registering Oracle JDBC driver class
+        // Step 2: Opening database connection
+        // Step 2.A: Create and get connection using DriverManager class
+        try ( Connection con = java.sql.DriverManager.getConnection(dbURL, "", "")) {
+            stm = con.createStatement();
+            stm.executeUpdate(query); // execute query on the database                       
+        } catch (java.sql.SQLException sqlex) {
+            System.err.println(sqlex);
+            sqlex.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println(ex);
+            ex.printStackTrace();
+        }
+    }
+     public static void addRevenue(String rentalID, String Revenue){
+        String query="INSERT INTO revenue(rentalID, Revenue) VALUES ('" + rentalID + "','" + Revenue +"');";
         System.out.println(query);
         try ( Connection con = java.sql.DriverManager.getConnection(dbURL, "", "")) {
             stm = con.createStatement();
@@ -92,8 +133,29 @@ public class DataHandler {
             System.err.println(ex);
             ex.printStackTrace();
         }
-    
+    }
+     public static void updateStore(String purchase){
+        String query="UPDATE store SET stocknumber = stocknumber-1 WHERE productID="+purchase;
+        String query1="UPDATE store c SET c.itemrevenue = c.cost + c.itemrevenue  WHERE productID="+purchase;
+        
+        System.out.println(query);
+        try ( Connection con = java.sql.DriverManager.getConnection(dbURL, "", "")) {
+            stm = con.createStatement();
+            stm.executeUpdate(query);//execute query on the database   
+            stm.executeUpdate(query1);
+        } catch (java.sql.SQLException sqlex) {
+            System.err.println(sqlex);
+            sqlex.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println(ex);
+            ex.printStackTrace();
         }
+    }
+     
+    
+    
+    
+
         
     
     public static void searchRecords(String table) {
